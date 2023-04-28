@@ -1,6 +1,12 @@
+using Blazored.LocalStorage;
+using Blazored.Toast;
 using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.Web;
+using MovieRental.UI;
 using MovieRental.UI.Data;
+using MovieRental.UI.Services.MovieService;
+using MovieRental.UI.Services.UserService;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -8,6 +14,19 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
 builder.Services.AddSingleton<WeatherForecastService>();
+
+// Http
+builder.Services.AddHttpClient();
+
+// Other Libraries
+builder.Services.AddBlazoredLocalStorage();
+builder.Services.AddAuthorizationCore();
+builder.Services.AddBlazoredToast();
+
+// Http Clients Services
+builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<IMovieService, MovieService>();
+
 
 var app = builder.Build();
 

@@ -126,6 +126,7 @@ namespace MovieRental.Api.Controllers
             var role = user.Role == 1 ? "admin" : "user";
             List<Claim> claims = new List<Claim>()
             {
+                new Claim(ClaimTypes.PrimarySid, user.Id.ToString()),
                 new Claim(ClaimTypes.Email, user.Email),
                 new Claim(ClaimTypes.Role, role)
             };

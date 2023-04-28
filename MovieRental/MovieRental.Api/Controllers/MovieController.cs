@@ -24,7 +24,7 @@ namespace MovieRental.Api.Controllers
 
         // GET: api/<MovieController>
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<MovieDto>>> Get()
+        public async Task<ActionResult<List<MovieDto>>> Get()
         {
             var movies = await _mediator.Send(new GetMovieListRequest());
             return Ok(movies);

@@ -1,0 +1,27 @@
+﻿@page "/buy"
+
+@inject ILocalStorageService LocalStorage
+@inject NavigationManager NavigationManager
+
+<h3>BuyMovie</h3>
+
+@code {
+    private bool isUserAuthorized = false;
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        var token = await LocalStorage.GetItemAsync<string>("token");
+        if (token == null)
+        {
+            isUserAuthorized = false;
+            NavigationManager.NavigateTo("/login");
+        }
+        else
+        {
+            isUserAuthorized = true;
+        }
+
+
+        StateHasChanged();
+    }
+}

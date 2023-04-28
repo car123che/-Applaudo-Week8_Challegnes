@@ -1,9 +1,95 @@
 ﻿@page "/"
+@inject ILocalStorageService LocalStorage
+@inject IMovieService MovieService
 
-<PageTitle>Index</PageTitle>
+<PageTitle>Movie Rental</PageTitle>
 
-<h1>Hello, world!</h1>
+@if (isUserAuthorized == false)
+{
+    <h2>Welcome to Our Movie Rental</h2>
+}
+else
+{
+    <h2>Hi! Welcome to Our Movie Rental</h2>
+}
 
-Welcome to your new app.
 
-<SurveyPrompt Title="How is Blazor working for you?" />
+@if( AllMovies.Count == 0)
+{
+    <div class="container">
+        <h4>No Movies Available</h4>
+    </div>
+}
+else
+{
+     <div class="btn-group" role="group" aria-label="Button group with nested dropdown">
+        <button type="button" class="btn btn-outline-dark">Order Movies</button>
+
+        <div class="btn-group" role="group">
+            <button type="button" class="btn btn-primary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                Categories
+            </button>
+            <ul class="dropdown-menu">
+                <li><a class="dropdown-item" href="#">Dropdown link</a></li>
+                <li><a class="dropdown-item" href="#">Dropdown link</a></li>
+            </ul>
+        </div>
+    </div>
+
+    @foreach (var movie in AllMovies)
+    {
+
+        <div class="card mb-3 mt-4" style="max-width: 540px;">
+            <div class="row g-0">
+                <div class="col">
+                    <img src="@movie.Poster" class="img-fluid rounded-start imagenes" alt="@movie.Title">
+                </div>
+                <div class="col-md-8">
+                    <div class="card-body">
+                        <h5 class="card-title"><a class="link-movie" href="MovieDetails/@movie.Id">@movie.Title</a></h5>
+                        <p>@movie.Description</p>
+                        <a class="btn btn-primary" href="rent" role="button">Rent Me!</a>
+                        <a class="btn btn-primary" href="buy" role="button">Buy Me!</a>
+                        <p class="card-text mt-3"><small class="text-body-secondary">Price $@movie.SalePrice. Stock: @movie.Stock</small></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+           
+    }
+}
+
+
+@code {
+    private bool isUserAuthorized = false;
+    private int counter = 0;
+
+    private List<MovieDto> AllMovies = new List<MovieDto>();
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        var token = await LocalStorage.GetItemAsync<string>("token");
+        if (token == null)
+        {
+            isUserAuthorized = false;
+        }
+        else
+        {
+            isUserAuthorized = true;
+        }
+
+        await GetAllMovies();
+
+        if (counter == 0)
+        {
+            counter++;
+            StateHasChanged();
+        }
+    }
+
+    private async Task GetAllMovies()
+    {
+        AllMovies = await MovieService.GetAllMovies();
+    }
+
+}
