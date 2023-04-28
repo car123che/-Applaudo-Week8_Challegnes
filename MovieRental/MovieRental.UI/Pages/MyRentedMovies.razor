@@ -1,12 +1,37 @@
 ﻿@page "/MyRentedMovies"
+
 @inject ILocalStorageService LocalStorage
 @inject NavigationManager NavigationManager
+@inject IRentService RentService
 
-<h3>MyRentedMovies</h3>
+<h3>My Rented Movies</h3>
+<button class="btn btn-success" @onclick="GetMyRentedMovies">See My Movies</button>
 
+@foreach (var movie in myMovies2)
+{
+
+    <div class="card mb-3 mt-4" style="max-width: 540px;">
+        <div class="row g-0">
+            <div class="col">
+                <img src="@movie.Poster" class="img-fluid rounded-start imagenes" alt="@movie.Title">
+            </div>
+            <div class="col-md-8">
+                <div class="card-body">
+                    <h5 class="card-title">@movie.Title</h5>
+                    <p>@movie.Description</p>
+                    <button class="btn btn-danger" @onclick="@(() => ReturnMovie(@movie.Id))">Return Movie</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+}
 @code {
     private int counter = 0;
     private bool isUserAuthorized = false;
+
+    private List<MovieDto> myMovies = new List<MovieDto>();
+    private List<MovieDto> myMovies2 = new List<MovieDto>();
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
@@ -23,8 +48,35 @@
 
         if (counter == 0)
         {
+            await GetMyRentedMovies();
             counter++;
             StateHasChanged();
         }
     }
+
+    public async Task GetMyRentedMovies()
+    {
+        var myMovies = await RentService.GetMyRentedMovies();
+        myMovies2.Clear();
+        foreach (var movie in myMovies)
+        {
+            Console.WriteLine(movie);
+            myMovies2.Add(movie);
+        }
+    }
+
+    public async Task ReturnMovie(int movieId)
+    {
+        var movieSellFlag = await RentService.ReturnMovie(movieId);
+
+        if (movieSellFlag == true)
+        {
+            NavigationManager.NavigateTo("");
+        }
+        else
+        {
+            NavigationManager.NavigateTo("MyRentedMovies");
+        }
+    }
+
 }

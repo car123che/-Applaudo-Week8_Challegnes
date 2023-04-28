@@ -1,11 +1,11 @@
 ﻿@page "/buy/{movieId:int}"
 
-@inject IMovieService MovieService
 @inject ILocalStorageService LocalStorage
-@inject IBuyService BuyService
 @inject NavigationManager NavigationManager
+@inject IMovieService MovieService
+@inject IBuyService BuyService
 
-<h3>BuyMovie</h3>
+<h3>Buy Movie</h3>
 
 @if (movie == null)
 {
@@ -18,7 +18,7 @@ else
             <div class="card mb-3 text-center">
                 <img src="@movie.Poster" class="card-img-top" alt="@movie.Title">
                 <div class="card-body">
-                    <h3 class="card-title">@movie.Title</h3>
+                    <h3 class="card-title">@movie.Title</h3> 
                     <p class="card-text mt-3"><small class="text-body-secondary">Price $@movie.SalePrice. </small></p>
                 </div>
             </div>
@@ -36,6 +36,7 @@ else
     public int movieId { get; set; }
     private int counter = 0;
     private bool isUserAuthorized = false;
+
     private MovieDto movie = new MovieDto();
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
