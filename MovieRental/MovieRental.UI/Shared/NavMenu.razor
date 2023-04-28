@@ -1,0 +1,76 @@
+﻿@inject ILocalStorageService LocalStorage
+
+<div class="top-row ps-3 navbar navbar-dark">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="">MovieRental.UI</a>
+        <button title="Navigation menu" class="navbar-toggler" @onclick="ToggleNavMenu">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+    </div>
+</div>
+
+<div class="@NavMenuCssClass" @onclick="ToggleNavMenu">
+    <nav class="flex-column">
+        <div class="nav-item px-3">
+            <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
+                <span class="oi oi-home" aria-hidden="true"></span> Home
+            </NavLink>
+        </div>
+        <div class="dropdown-divider"></div>
+        <div class="nav-item px-3">
+            @if(isUserAuthorized == false)
+            {
+                <NavLink class="nav-link" href="login">
+                    <span class="oi oi-account-login" aria-hidden="true"></span> Login
+                </NavLink>
+            }else{
+
+                <NavLink class="nav-link" href="MyBoughtMovies">
+                    <span class="oi oi-account-login" aria-hidden="true"></span> My Bought Movies
+                </NavLink>
+                <NavLink class="nav-link" href="MyRentedMovies">
+                    <span class="oi oi-account-login" aria-hidden="true"></span> My Rented Movies
+                </NavLink>
+                <div class="dropdown-divider"></div>
+                <a class="nav-link" @onclick="Logout" style="cursor: pointer">
+                    <span class="oi oi-account-logout" aria-hidden="true"></span> Logout
+                </a>
+
+            }
+        </div>
+    </nav>
+</div>
+
+@code {
+    private bool collapseNavMenu = true;
+    private bool isUserAuthorized = false;
+
+    private string? NavMenuCssClass => collapseNavMenu ? "collapse" : null;
+
+    private void ToggleNavMenu()
+    {
+        collapseNavMenu = !collapseNavMenu;
+    }
+
+    private async void Logout()
+    {
+        await LocalStorage.RemoveItemAsync("token");
+        //await AuthStateProvider.GetAuthenticationStateAsync();
+    }
+
+    
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        var token = await LocalStorage.GetItemAsync<string>("token");
+        if(token == null)
+        {
+            isUserAuthorized = false;
+        }
+        else
+        {
+            isUserAuthorized = true;
+        }
+
+        StateHasChanged();
+    }
+}

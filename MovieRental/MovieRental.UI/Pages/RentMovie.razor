@@ -1,0 +1,79 @@
+﻿@page "/rent/{movieId:int}"
+
+@inject ILocalStorageService LocalStorage
+@inject NavigationManager NavigationManager
+@inject IMovieService MovieService
+@inject IRentService RentService
+
+<h3>Rent Movie</h3>
+
+@if (movie == null)
+{
+    <h3>Movie Does not Exists!  </h3>
+}
+else
+{
+    <div class="container">
+        <div class="row">
+            <div class="card mb-3 text-center">
+                <img src="@movie.Poster" class="card-img-top" alt="@movie.Title">
+                <div class="card-body">
+                    <h3 class="card-title">@movie.Title</h3> 
+                    <p class="card-text mt-3"><small class="text-body-secondary">Price $@movie.SalePrice. </small></p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="d-grid gap-2">
+        <button class="btn btn-outline-warning" @onclick="RentMovieHanlder">Rent Movie</button>
+    </div>
+}
+
+@code {
+    [Parameter]
+    public int movieId { get; set; }
+    private int counter = 0;
+    private bool isUserAuthorized = false;
+
+    private MovieDto movie = new MovieDto();
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        var token = await LocalStorage.GetItemAsync<string>("token");
+        if (token == null)
+        {
+            isUserAuthorized = false; 
+            NavigationManager.NavigateTo("/login");
+        }
+        else
+        {
+            isUserAuthorized = true;
+        }
+
+        if (counter == 0)
+        {
+            await GetMovieDetails();
+            counter++;
+            StateHasChanged();
+        }
+    }
+
+    private async Task RentMovieHanlder()
+    {
+        var movieSellFlag = await RentService.RentMovie(movieId);
+
+        if (movieSellFlag == true)
+        {
+            NavigationManager.NavigateTo("MyRentedMovies");
+        }
+        else
+        {
+            NavigationManager.NavigateTo("");
+        }
+    }
+
+    private async Task GetMovieDetails()
+    {
+        movie = await MovieService.GeMovieDetails(movieId);
+    }
+}

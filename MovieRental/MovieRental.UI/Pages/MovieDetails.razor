@@ -1,0 +1,51 @@
+﻿@page "/MovieDetails/{id:int}"
+@inject IMovieService MovieService
+
+@if (movie == null)
+{
+    <h3>Movie Does not Exists!  </h3>
+}
+else
+{
+    <div class="container">
+        <div class="row">
+            <div class="card mb-3 text-center">
+                <img src="@movie.Poster" class="card-img-top" alt="@movie.Title">
+                <div class="card-body">
+                    <h3 class="card-title">@movie.Title</h3>
+                    <p>@movie.Description</p>
+                    <a class="btn btn-primary" href="rent/@movie.Id" role="button">Rent Me!</a>
+                    <a class="btn btn-primary" href="buy/@movie.Id" role="button">Buy Me!</a>
+                    <p class="card-text mt-3"><small class="text-body-secondary">Price $@movie.SalePrice. Stock: @movie.Stock</small></p>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+
+
+@code {
+    [Parameter]
+    public int id { get; set; }
+    private int counter = 0;
+
+    private MovieDto movie = new MovieDto();
+
+    private async Task GetMovieDetails()
+    {
+        movie = await MovieService.GeMovieDetails(id);
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        await GetMovieDetails();
+
+        if (counter == 0)
+        {
+            counter++;
+            StateHasChanged();
+        }
+    }
+
+}
