@@ -25,20 +25,28 @@ namespace MovieRental.Api.Controllers
             _mediator = mediator;
         }
 
-        // GET: api/<MovieTagController>
+        // -- GET: api/<MovieTagController>
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<MovieDto>>> Get()
+        public async Task<ActionResult<List<MovieDto>>> Get()
         {
             var movies = await _mediator.Send(new GetMovieListOrderedRequest());
             return Ok(movies);
         }
 
-        // GET api/<MovieTagController>/5
+        // -- GET api/<MovieTagController>/5
         [HttpGet("{id}")]
         public async Task<ActionResult<MovieTagDetails>> Get(int id)
         {
             var movieTagDetail = await _mediator.Send(new GetMovieTagsRequest { Id = id});
             return Ok(movieTagDetail);
+        }
+
+        // -- GET api/<MovieTagController>/5
+        [HttpGet("MoviesByTag/{id}")]
+        public async Task<ActionResult<List<MovieDto>>> GetMoviesByTag(int id)
+        {
+            var movies = await _mediator.Send(new GetMoviesByTagRequest { TagId = id });
+            return Ok(movies);
         }
 
         // POST api/<MovieTagController>

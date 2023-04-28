@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace MovieRental.Application.Features.Sell.Handlers.Queries
 {
-    public class GetBoughtMoviesRequestHandler : IRequestHandler<GetBoughMoviesRequest, IEnumerable<MovieDto>>
+    public class GetBoughtMoviesRequestHandler : IRequestHandler<GetBoughMoviesRequest, List<MovieDto>>
     {
 
         private readonly ISellRepository _sellRepository;
@@ -24,7 +24,7 @@ namespace MovieRental.Application.Features.Sell.Handlers.Queries
         }
 
 
-        public async Task<IEnumerable<MovieDto>> Handle(GetBoughMoviesRequest request, CancellationToken cancellationToken)
+        public async Task<List<MovieDto>> Handle(GetBoughMoviesRequest request, CancellationToken cancellationToken)
         {
             var movies = await _sellRepository.GetBoughtMovies(request.Id);
             return _mapper.Map<List<MovieDto>>(movies);

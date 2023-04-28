@@ -6,7 +6,7 @@ using System.Text;
 
 namespace MovieRental.Application.Features.Sell.Requests.Queries
 {
-    public class GetBoughMoviesRequest: IRequest<IEnumerable<MovieDto>>
+    public class GetBoughMoviesRequest: IRequest<List<MovieDto>>
     {
         public int Id { get; set; }
     }

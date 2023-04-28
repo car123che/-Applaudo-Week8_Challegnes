@@ -26,15 +26,15 @@ namespace MovieRental.Api.Controllers
 
       
 
-        // GET api/<TagController>/5
+        // -- GET api/<TagController>/5
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<TagDto>>>  Get()
+        public async Task<ActionResult<List<TagDto>>>  Get()
         {
             var tags = await _mediator.Send(new GetTagListRequest());
             return Ok(tags);
         }
 
-        // GET: api/<TagController>
+        // -- GET: api/<TagController>
         [HttpGet("{id}")]
         public async Task<ActionResult<TagDto>> Get(int id)
         {

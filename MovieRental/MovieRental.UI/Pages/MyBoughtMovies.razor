@@ -1,0 +1,70 @@
+﻿@page "/MyBoughtMovies"
+
+@inject ILocalStorageService LocalStorage
+@inject IBuyService BuyService
+@inject NavigationManager NavigationManager
+
+<h3>My Bought Movies</h3>
+
+
+<button class="btn btn-success" @onclick="GetMyBoughtMovies">See My Movies</button>
+
+    @foreach (var movie in myMovies2)
+    {
+
+        <div class="card mb-3 mt-4" style="max-width: 540px;">
+            <div class="row g-0">
+                <div class="col">
+                    <img src="@movie.Poster" class="img-fluid rounded-start imagenes" alt="@movie.Title">
+                </div>
+                <div class="col-md-8">
+                    <div class="card-body">
+                        <h5 class="card-title">@movie.Title</h5>
+                        <p>@movie.Description</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+           
+    }
+
+
+@code {
+    private int counter = 0;
+    private bool isUserAuthorized = false;
+
+    private List<MovieDto> myMovies = new List<MovieDto>();
+    private List<MovieDto> myMovies2 = new List<MovieDto>();
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        var token = await LocalStorage.GetItemAsync<string>("token");
+        if (token == null)
+        {
+            isUserAuthorized = false;
+            NavigationManager.NavigateTo("/login");
+        }
+        else
+        {
+            isUserAuthorized = true;
+        }
+
+        if (counter < 2)
+        {
+            await GetMyBoughtMovies();
+            counter++;
+            StateHasChanged();
+        }
+    }
+
+    public async Task GetMyBoughtMovies()
+    {
+        var myMovies = await BuyService.GetMyBoughtMovies();
+        myMovies2.Clear();
+        foreach (var movie in myMovies)
+        {
+            Console.WriteLine(movie);
+            myMovies2.Add(movie);
+        }
+    }
+
+}

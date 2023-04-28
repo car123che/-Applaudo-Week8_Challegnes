@@ -1,6 +1,7 @@
 ﻿@page "/"
 @inject ILocalStorageService LocalStorage
 @inject IMovieService MovieService
+@inject ITagService TagService
 
 <PageTitle>Movie Rental</PageTitle>
 
@@ -23,17 +24,21 @@ else
 else
 {
      <div class="btn-group" role="group" aria-label="Button group with nested dropdown">
-        <button type="button" class="btn btn-outline-dark">Order Movies</button>
+        <button type="button" class="btn btn-outline-dark" @onclick="GetOrderedMovies" >Order Movies</button>
+        <button type="button" class="btn btn-outline-dark" @onclick="GetMoviesByTag">Search By Tag ></button>
+        @if (AllTags != null && AllTags.Count > 1)
+        {
+            <div class="form-group">
+                <select class="form-control" @bind="currentTagId">
+                    @foreach (var tag in AllTags)
+                    {
+                        <option value="@tag.Id">@tag.Name</option>
+                    }
+                </select>
+            </div>
+        }
 
-        <div class="btn-group" role="group">
-            <button type="button" class="btn btn-primary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-                Categories
-            </button>
-            <ul class="dropdown-menu">
-                <li><a class="dropdown-item" href="#">Dropdown link</a></li>
-                <li><a class="dropdown-item" href="#">Dropdown link</a></li>
-            </ul>
-        </div>
+        
     </div>
 
     @foreach (var movie in AllMovies)
@@ -48,8 +53,8 @@ else
                     <div class="card-body">
                         <h5 class="card-title"><a class="link-movie" href="MovieDetails/@movie.Id">@movie.Title</a></h5>
                         <p>@movie.Description</p>
-                        <a class="btn btn-primary" href="rent" role="button">Rent Me!</a>
-                        <a class="btn btn-primary" href="buy" role="button">Buy Me!</a>
+                        <a class="btn btn-primary" href="rent/@movie.Id" role="button">Rent Me!</a>
+                        <a class="btn btn-primary" href="buy/@movie.Id" role="button">Buy Me!</a>
                         <p class="card-text mt-3"><small class="text-body-secondary">Price $@movie.SalePrice. Stock: @movie.Stock</small></p>
                     </div>
                 </div>
@@ -63,8 +68,10 @@ else
 @code {
     private bool isUserAuthorized = false;
     private int counter = 0;
+    private int currentTagId = 1;
 
     private List<MovieDto> AllMovies = new List<MovieDto>();
+    private List<TagDto> AllTags = new List<TagDto>();
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
@@ -78,10 +85,10 @@ else
             isUserAuthorized = true;
         }
 
-        await GetAllMovies();
-
         if (counter == 0)
         {
+            await GetAllMovies();
+            await GetAllTags();
             counter++;
             StateHasChanged();
         }
@@ -90,6 +97,22 @@ else
     private async Task GetAllMovies()
     {
         AllMovies = await MovieService.GetAllMovies();
+    }
+
+    private async Task GetOrderedMovies()
+    {
+        AllMovies = await MovieService.GetOrderedMovies();
+    }
+
+    private async Task GetAllTags()
+    {
+        AllTags = await TagService.GetAllTags();
+    }
+
+    private async Task GetMoviesByTag()
+    {
+        Console.WriteLine("Get Movies By Tag");
+        AllMovies = await MovieService.GetMoviesByTag(currentTagId);
     }
 
 }

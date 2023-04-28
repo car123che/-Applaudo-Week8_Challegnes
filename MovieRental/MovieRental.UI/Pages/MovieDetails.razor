@@ -14,8 +14,8 @@ else
                 <div class="card-body">
                     <h3 class="card-title">@movie.Title</h3>
                     <p>@movie.Description</p>
-                    <a class="btn btn-primary" href="rent" role="button">Rent Me!</a>
-                    <a class="btn btn-primary" href="buy" role="button">Buy Me!</a>
+                    <a class="btn btn-primary" href="rent/@movie.Id" role="button">Rent Me!</a>
+                    <a class="btn btn-primary" href="buy/@movie.Id" role="button">Buy Me!</a>
                     <p class="card-text mt-3"><small class="text-body-secondary">Price $@movie.SalePrice. Stock: @movie.Stock</small></p>
                 </div>
             </div>

@@ -1,13 +1,13 @@
-﻿@page "/rent"
-
+﻿@page "/MyRentedMovies"
 @inject ILocalStorageService LocalStorage
 @inject NavigationManager NavigationManager
 
-<h3>RentMovie</h3>
+<h3>MyRentedMovies</h3>
 
 @code {
-    private bool isUserAuthorized = false;
     private int counter = 0;
+    private bool isUserAuthorized = false;
+
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         var token = await LocalStorage.GetItemAsync<string>("token");

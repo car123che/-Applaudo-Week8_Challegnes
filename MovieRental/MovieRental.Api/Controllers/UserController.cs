@@ -88,7 +88,7 @@ namespace MovieRental.Api.Controllers
             await _mediator.Send(command);
             return NoContent();
         }
-
+        // -- POST api/<UserController>/login
         [HttpPost("login")]
         public async Task<ActionResult<string>> Login([FromBody] LoginDetail loginDetail)
         {

@@ -34,6 +34,25 @@ namespace MovieRental.Persistence.Repositories
             await _dbContext.SaveChangesAsync();
         }
 
+        public async Task<List<Movie>> GetMoviesByTag(int TagId)
+        {
+            var movies = await _dbContext.MovieTags.Include( q => q.Movie).Where( q => q.TagId == TagId )
+                                    .Select( q => new Movie
+                                    {
+                                        Id = q.MovieId,
+                                        Title = q.Movie.Title,
+                                        SalePrice = q.Movie.SalePrice,
+                                        Description = q.Movie.Description,
+                                        Poster = q.Movie.Poster,
+                                        Stock = q.Movie.Stock,
+                                        Likes = q.Movie.Likes,
+                                        TrailerLink = q.Movie.TrailerLink,
+                                        Availability = q.Movie.Availability
+                                    })
+                                    .ToListAsync();
+            return movies;
+        }
+
         public async  Task<List<Movie>> GetMoviesOrdered()
         {
             var movies = await _dbContext.Movies.OrderBy(q => q.Title).ToListAsync();

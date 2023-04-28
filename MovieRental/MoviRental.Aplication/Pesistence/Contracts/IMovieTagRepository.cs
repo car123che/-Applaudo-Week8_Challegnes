@@ -14,5 +14,6 @@ namespace MovieRental.Application.Pesistence.Contracts
         Task Delete(MovieTag entity);
         Task<List<Tag>> GetMovieTags(int id);
         Task<List<Movie>> GetMoviesOrdered();
+        Task<List<Movie>> GetMoviesByTag(int TagId);
     }
 }

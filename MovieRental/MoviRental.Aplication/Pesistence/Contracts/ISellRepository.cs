@@ -13,7 +13,7 @@ namespace MovieRental.Application.Pesistence.Contracts
         Task<bool> UserExists(int id);
         Task<bool> MovieExists(int id);
         Task<bool> MovieInStock(int id);
-        Task<IEnumerable<Movie>> GetBoughtMovies(int id);
+        Task<IReadOnlyList<Movie>> GetBoughtMovies(int id);
 
     }
 }

@@ -18,7 +18,7 @@ namespace MovieRental.Persistence.Repositories
             _dbContext = dbContext;
         }
 
-        public async Task<IEnumerable<Movie>> GetBoughtMovies(int id)
+        public async Task<IReadOnlyList<Movie>> GetBoughtMovies(int id)
         {
             var movies = await _dbContext.Sells.Include(q => q.Movie)
                         .Where(q => q.UserId == id).Select(

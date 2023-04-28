@@ -5,7 +5,10 @@ using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.Web;
 using MovieRental.UI;
 using MovieRental.UI.Data;
+using MovieRental.UI.Services.BuyService;
 using MovieRental.UI.Services.MovieService;
+using MovieRental.UI.Services.RentService;
+using MovieRental.UI.Services.TagService;
 using MovieRental.UI.Services.UserService;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -26,7 +29,9 @@ builder.Services.AddBlazoredToast();
 // Http Clients Services
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IMovieService, MovieService>();
-
+builder.Services.AddScoped<ITagService, TagService>();
+builder.Services.AddScoped<IRentService, RentService>();
+builder.Services.AddScoped<IBuyService, BuyService>();
 
 var app = builder.Build();
 

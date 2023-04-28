@@ -22,7 +22,7 @@ namespace MovieRental.Api.Controllers
             _mediator = mediator;
         }
 
-        // GET: api/<MovieController>
+        // -- GET: api/<MovieController>
         [HttpGet]
         public async Task<ActionResult<List<MovieDto>>> Get()
         {
@@ -30,7 +30,7 @@ namespace MovieRental.Api.Controllers
             return Ok(movies);
         }
 
-        // GET api/<MovieController>/5
+        // -- GET api/<MovieController>/5
         [HttpGet("{id}")]
         public async Task<ActionResult<MovieDto>> Get(int id)
         {
